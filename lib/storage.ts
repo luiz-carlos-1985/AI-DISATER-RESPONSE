@@ -23,8 +23,6 @@ export interface User {
 export interface UserSettings {
   notifications: boolean
   autoRefresh: boolean
-  theme: 'dark' | 'light'
-  language: string
 }
 
 export interface Message {
@@ -148,9 +146,7 @@ class StorageManager {
   getUserSettings(): UserSettings {
     return this.getItem('userSettings', {
       notifications: true,
-      autoRefresh: true,
-      theme: 'dark' as const,
-      language: 'en'
+      autoRefresh: true
     })
   }
 

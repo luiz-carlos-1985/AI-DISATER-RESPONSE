@@ -31,14 +31,20 @@ const colors = {
 
 export default function NotificationSystem({ notifications, onRemove }: NotificationSystemProps) {
   useEffect(() => {
+    const timers: NodeJS.Timeout[] = []
+    
     notifications.forEach(notification => {
       if (notification.duration) {
         const timer = setTimeout(() => {
           onRemove(notification.id)
         }, notification.duration)
-        return () => clearTimeout(timer)
+        timers.push(timer)
       }
     })
+    
+    return () => {
+      timers.forEach(timer => clearTimeout(timer))
+    }
   }, [notifications, onRemove])
 
   return (

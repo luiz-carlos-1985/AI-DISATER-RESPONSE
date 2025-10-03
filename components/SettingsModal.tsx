@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Settings, Bell, RefreshCw, Palette, Globe, Download, Upload, Shield } from 'lucide-react'
+import { X, Settings, Bell, RefreshCw, Download, Upload, Shield } from 'lucide-react'
 import { UserSettings } from '../lib/storage'
 
 interface SettingsModalProps {
@@ -103,39 +103,7 @@ export default function SettingsModal({
                 </label>
               </div>
 
-              {/* Theme */}
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Palette className="w-5 h-5 text-purple-500" />
-                  <h3 className="font-medium">Theme</h3>
-                </div>
-                <select
-                  value={formData.theme}
-                  onChange={(e) => setFormData({ ...formData, theme: e.target.value as 'dark' | 'light' })}
-                  className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="dark">Dark</option>
-                  <option value="light">Light</option>
-                </select>
-              </div>
 
-              {/* Language */}
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Globe className="w-5 h-5 text-blue-500" />
-                  <h3 className="font-medium">Language</h3>
-                </div>
-                <select
-                  value={formData.language}
-                  onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-                  className="w-full px-4 py-3 glass rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="en">English</option>
-                  <option value="pt">Português</option>
-                  <option value="es">Español</option>
-                  <option value="fr">Français</option>
-                </select>
-              </div>
 
               {/* Data Management */}
               <div className="space-y-3">

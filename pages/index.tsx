@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AlertTriangle, Shield, MapPin, Users, Clock, Zap, Radio, Satellite, Phone, Truck, Heart, Home, LogIn, Crown, Plus, Settings, Send, Download } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'
@@ -46,29 +46,36 @@ export default function AIDisasterResponse() {
   const [editingIncident, setEditingIncident] = useState<Incident | undefined>()
   const [incidents, setIncidents] = useState<Incident[]>([])
   const [messages, setMessages] = useState<Message[]>([])
-  const [userSettings, setUserSettings] = useState(storage.getUserSettings())
+  const [userSettings, setUserSettings] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return storage.getUserSettings()
+    }
+    return { notifications: true, autoRefresh: true }
+  })
   const notifications = useNotifications()
 
   useEffect(() => {
-    setIsClient(true)
-    const savedUser = storage.getUser()
-    if (savedUser) setUser(savedUser)
-    
-    const existingIncidents = storage.getIncidents()
-    const existingMessages = storage.getMessages()
-    
-    if (existingIncidents.length === 0 && existingMessages.length === 0) {
-      initializeDefaultData()
+    if (typeof window !== 'undefined') {
+      setIsClient(true)
+      const savedUser = storage.getUser()
+      if (savedUser) setUser(savedUser)
+      
+      const existingIncidents = storage.getIncidents()
+      const existingMessages = storage.getMessages()
+      
+      if (existingIncidents.length === 0 && existingMessages.length === 0) {
+        initializeDefaultData()
+      }
+      
+      setIncidents(storage.getIncidents())
+      setMessages(storage.getMessages())
     }
-    
-    setIncidents(storage.getIncidents())
-    setMessages(storage.getMessages())
   }, [])
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date())
-      if (userSettings.autoRefresh) {
+      if (typeof window !== 'undefined' && userSettings.autoRefresh) {
         setIncidents(storage.getIncidents())
         setMessages(storage.getMessages())
       }
@@ -424,11 +431,11 @@ export default function AIDisasterResponse() {
                   </div>
                   
                   {/* Simulated Map */}
-                  <div className="relative w-full h-full bg-gray-800 rounded-lg overflow-hidden min-h-[200px]">
+                  <div className="relative w-full h-48 sm:h-64 lg:h-72 bg-gray-800 rounded-lg overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 to-green-900/30" />
                     
                     {/* Incident Markers */}
-                    {useMemo(() => incidents.filter(i => i.status === 'Active').slice(0, 5), [incidents]).map((incident, index) => {
+                    {incidents.filter(i => i.status === 'Active').slice(0, 5).map((incident, index) => {
                       const positions = [
                         { left: '20%', top: '25%' },
                         { left: '60%', top: '40%' },
@@ -475,20 +482,20 @@ export default function AIDisasterResponse() {
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                      className="absolute top-1/2 left-1/2 w-20 h-20 sm:w-32 sm:h-32 -translate-x-1/2 -translate-y-1/2"
+                      className="absolute top-1/2 left-1/2 w-16 h-16 sm:w-24 sm:h-24 -translate-x-1/2 -translate-y-1/2"
                     >
                       <div className="w-full h-full border border-green-400/30 rounded-full" />
-                      <div className="absolute top-0 left-1/2 w-0.5 h-10 sm:h-16 bg-gradient-to-b from-green-400 to-transparent -translate-x-1/2" />
+                      <div className="absolute top-0 left-1/2 w-0.5 h-8 sm:h-12 bg-gradient-to-b from-green-400 to-transparent -translate-x-1/2" />
                     </motion.div>
                     
                     {/* Grid Lines */}
-                    <div className="absolute inset-0 opacity-20">
-                      <div className="absolute top-1/4 left-0 w-full h-px bg-green-400/30" />
-                      <div className="absolute top-1/2 left-0 w-full h-px bg-green-400/30" />
-                      <div className="absolute top-3/4 left-0 w-full h-px bg-green-400/30" />
-                      <div className="absolute left-1/4 top-0 w-px h-full bg-green-400/30" />
-                      <div className="absolute left-1/2 top-0 w-px h-full bg-green-400/30" />
-                      <div className="absolute left-3/4 top-0 w-px h-full bg-green-400/30" />
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="absolute top-1/4 left-0 w-full h-px bg-green-400" />
+                      <div className="absolute top-1/2 left-0 w-full h-px bg-green-400" />
+                      <div className="absolute top-3/4 left-0 w-full h-px bg-green-400" />
+                      <div className="absolute left-1/4 top-0 w-px h-full bg-green-400" />
+                      <div className="absolute left-1/2 top-0 w-px h-full bg-green-400" />
+                      <div className="absolute left-3/4 top-0 w-px h-full bg-green-400" />
                     </div>
                   </div>
                 </motion.div>
@@ -546,7 +553,7 @@ export default function AIDisasterResponse() {
                     </motion.button>
                   </div>
                   <div className="space-y-3">
-                    {useMemo(() => incidents.filter(i => i.status === 'Active').slice(0, 5), [incidents]).map((incident, index) => (
+                    {incidents.filter(i => i.status === 'Active').slice(0, 5).map((incident, index) => (
                       <motion.div
                         key={`sidebar-${incident.id}-${index}`}
                         initial={{ opacity: 0, y: 10 }}
@@ -678,7 +685,7 @@ export default function AIDisasterResponse() {
                         <span>New Incident</span>
                       </motion.button>
                     </div>
-                    {useMemo(() => incidents, [incidents]).map((incident, index) => (
+                    {incidents.map((incident, index) => (
                       <motion.div
                         key={`incidents-${incident.id}-${index}`}
                         initial={{ opacity: 0, x: -20 }}
@@ -890,7 +897,7 @@ export default function AIDisasterResponse() {
                         <span>Send Message</span>
                       </motion.button>
                     </div>
-                    {useMemo(() => messages.slice(0, 10), [messages]).map((comm, index) => (
+                    {messages.slice(0, 10).map((comm, index) => (
                       <motion.div
                         key={`comm-${comm.id}-${index}`}
                         initial={{ opacity: 0, y: 10 }}
