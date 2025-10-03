@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AlertTriangle, Shield, MapPin, Users, Clock, Zap, Radio, Satellite, Phone, Truck, Heart, Home, LogIn, Crown, Plus, Settings, Send, Download } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'
@@ -51,14 +51,16 @@ export default function AIDisasterResponse() {
 
   useEffect(() => {
     setIsClient(true)
+    const savedUser = storage.getUser()
+    if (savedUser) setUser(savedUser)
     
-    // Initialize default data only once
-    if (!localStorage.getItem('emergency-system-initialized')) {
+    const existingIncidents = storage.getIncidents()
+    const existingMessages = storage.getMessages()
+    
+    if (existingIncidents.length === 0 && existingMessages.length === 0) {
       initializeDefaultData()
     }
     
-    const savedUser = storage.getUser()
-    if (savedUser) setUser(savedUser)
     setIncidents(storage.getIncidents())
     setMessages(storage.getMessages())
   }, [])
@@ -426,7 +428,7 @@ export default function AIDisasterResponse() {
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 to-green-900/30" />
                     
                     {/* Incident Markers */}
-                    {incidents.filter(i => i.status === 'Active').slice(0, 5).map((incident, index) => {
+                    {useMemo(() => incidents.filter(i => i.status === 'Active').slice(0, 5), [incidents]).map((incident, index) => {
                       const positions = [
                         { left: '20%', top: '25%' },
                         { left: '60%', top: '40%' },
@@ -436,7 +438,7 @@ export default function AIDisasterResponse() {
                       ]
                       return (
                         <motion.div
-                          key={incident.id}
+                          key={`map-${incident.id}-${index}`}
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
                           transition={{ delay: 0.5 + index * 0.2 }}
@@ -544,9 +546,9 @@ export default function AIDisasterResponse() {
                     </motion.button>
                   </div>
                   <div className="space-y-3">
-                    {incidents.filter(i => i.status === 'Active').slice(0, 5).map((incident, index) => (
+                    {useMemo(() => incidents.filter(i => i.status === 'Active').slice(0, 5), [incidents]).map((incident, index) => (
                       <motion.div
-                        key={incident.id}
+                        key={`sidebar-${incident.id}-${index}`}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 * index }}
@@ -676,9 +678,9 @@ export default function AIDisasterResponse() {
                         <span>New Incident</span>
                       </motion.button>
                     </div>
-                    {incidents.map((incident, index) => (
+                    {useMemo(() => incidents, [incidents]).map((incident, index) => (
                       <motion.div
-                        key={incident.id}
+                        key={`incidents-${incident.id}-${index}`}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
@@ -888,9 +890,9 @@ export default function AIDisasterResponse() {
                         <span>Send Message</span>
                       </motion.button>
                     </div>
-                    {messages.slice(0, 10).map((comm, index) => (
+                    {useMemo(() => messages.slice(0, 10), [messages]).map((comm, index) => (
                       <motion.div
-                        key={index}
+                        key={`comm-${comm.id}-${index}`}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}

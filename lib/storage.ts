@@ -37,6 +37,16 @@ export interface Message {
 }
 
 class StorageManager {
+  private idCounter = 0
+  
+  private generateUniqueId(prefix: string): string {
+    this.idCounter++
+    const timestamp = Date.now().toString(36)
+    const random = Math.random().toString(36).substr(2, 5)
+    const counter = this.idCounter.toString(36)
+    return `${prefix}-${timestamp}${random}${counter}`
+  }
+
   private getItem<T>(key: string, defaultValue: T): T {
     if (typeof window === 'undefined') return defaultValue
     try {
@@ -66,11 +76,9 @@ class StorageManager {
 
   addIncident(incident: Omit<Incident, 'id' | 'createdAt' | 'updatedAt'>): Incident {
     const incidents = this.getIncidents()
-    const timestamp = Date.now()
-    const random = Math.floor(Math.random() * 1000)
     const newIncident: Incident = {
       ...incident,
-      id: `INC-${timestamp}-${random}`,
+      id: this.generateUniqueId('INC'),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
@@ -125,11 +133,9 @@ class StorageManager {
 
   addMessage(message: Omit<Message, 'id'>): Message {
     const messages = this.getMessages()
-    const timestamp = Date.now()
-    const random = Math.floor(Math.random() * 1000)
     const newMessage: Message = {
       ...message,
-      id: `MSG-${timestamp}-${random}`
+      id: this.generateUniqueId('MSG')
     }
     messages.unshift(newMessage)
     if (messages.length > 100) {
