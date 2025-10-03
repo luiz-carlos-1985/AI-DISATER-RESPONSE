@@ -242,6 +242,30 @@ NEXT_PUBLIC_MAP_API_KEY=your_map_api_key
 4. Test thoroughly
 5. Submit a pull request
 
+## Screenshots: 
+
+<img width="1256" height="1044" alt="image" src="https://github.com/user-attachments/assets/01b6e540-e52e-4d4c-ba98-944b9da2a961" />
+
+<img width="1012" height="1040" alt="image" src="https://github.com/user-attachments/assets/a1c3552e-55a9-49f8-af04-8af2eba3b67a" />
+
+<img width="1040" height="854" alt="image" src="https://github.com/user-attachments/assets/0ad3ef4c-1da1-4bbe-a040-cc39623e52e2" />
+
+<img width="1188" height="1046" alt="image" src="https://github.com/user-attachments/assets/b5c9b830-afa9-49b5-8c8c-02835b72d770" />
+
+<img width="1190" height="992" alt="image" src="https://github.com/user-attachments/assets/21402499-3ab0-4b10-a132-e3f8e7685db7" />
+
+<img width="1205" height="983" alt="image" src="https://github.com/user-attachments/assets/a7ba7459-c578-4a83-bc8a-5afc5c614fb9" />
+
+<img width="1201" height="997" alt="image" src="https://github.com/user-attachments/assets/327b3328-a1d7-4a62-ba45-848d4a86b9b7" />
+
+<img width="1207" height="996" alt="image" src="https://github.com/user-attachments/assets/15d2c34a-53e5-47d7-9a3d-b2ec7feb6208" />
+
+<img width="1231" height="1004" alt="image" src="https://github.com/user-attachments/assets/0045d6aa-2571-44fd-923e-c329797f271a" />
+
+<img width="1545" height="986" alt="image" src="https://github.com/user-attachments/assets/e10838e4-4204-456e-9164-f98d3335b970" />
+
+<img width="1328" height="973" alt="image" src="https://github.com/user-attachments/assets/03e869c9-1da6-453a-92bd-8fc3839880c2" />
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
